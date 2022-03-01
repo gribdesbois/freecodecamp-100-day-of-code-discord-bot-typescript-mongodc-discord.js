@@ -1,4 +1,4 @@
-import { CamperInt } from '../database/directory/CamperModel'
+import { CamperInt } from '../database/models/CamperModel'
 
 export const updateCamperData = async (Camper: CamperInt) => {
   Camper.day += 1

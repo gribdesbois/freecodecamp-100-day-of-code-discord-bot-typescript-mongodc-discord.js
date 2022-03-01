@@ -1,3 +1,4 @@
+import { onReady } from './events/onReady'
 import { Client } from 'discord.js'
 import { IntentOptions } from './config/IntentOptions'
 import { connectDatabase } from './database/connectDatabase'
@@ -10,7 +11,7 @@ const { TOKEN } = process.env
   if (!validateEnv()) return
   const BOT = new Client({ intents: IntentOptions })
 
-  BOT.on('ready', () => console.log('Connected to Discord!'))
+  BOT.on('ready', async () => await onReady(BOT))
 
   BOT.on(
     'interactionCreate',
