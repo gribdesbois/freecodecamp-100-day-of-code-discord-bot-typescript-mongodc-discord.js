@@ -1,5 +1,8 @@
 import { CommandInt as Command } from './../interfaces/Command'
 import { SlashCommandBuilder } from '@discordjs/builders'
+import { getCamperData } from '../modules/getCamperData'
+import { updateCamperData } from '../modules/updateCamperData'
+import { MessageEmbed } from 'discord.js'
 
 export const oneHundred: Command = {
   data: new SlashCommandBuilder()
@@ -15,5 +18,25 @@ export const oneHundred: Command = {
     await interaction.deferReply()
     const { user } = interaction
     const text = interaction.options.getString('message', true)
+
+    const targetCamper = await getCamperData(user.id)
+    const updatedCamper = await updateCamperData(targetCamper)
+
+    const oneHundredEmbed = new MessageEmbed()
+    oneHundredEmbed.setTitle('100 Days of Code')
+    oneHundredEmbed.setDescription(text)
+    oneHundredEmbed.setAuthor({
+      name: user.tag,
+      iconURL: user.displayAvatarURL(),
+    })
+    oneHundredEmbed.addField('Round', updatedCamper.round.toString(), true)
+    oneHundredEmbed.addField('Day', updatedCamper.day.toString(), true)
+    oneHundredEmbed.setFooter({
+      text:
+        'Day completed: ' +
+        new Date(updatedCamper.timestamp).toLocaleDateString(),
+    })
+
+    await interaction.editReply({ embeds: [oneHundredEmbed] })
   },
 }
